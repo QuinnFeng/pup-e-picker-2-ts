@@ -1,4 +1,6 @@
 import { ReactNode } from "react";
+import { useDogs } from "./DogsProvider";
+import { ActiveTab } from "../types";
 
 export const Section = ({
   label,
@@ -8,6 +10,13 @@ export const Section = ({
   label: string;
   children: ReactNode;
 }) => {
+  const { favoriteCounts, unfavoriteCounts, activeTab, setActiveTab } =
+    useDogs();
+  const buttonToggleHandler = (aT: ActiveTab) => {
+    const value = aT === activeTab ? "all-dogs" : aT;
+    setActiveTab(value);
+  };
+
   return (
     <section id="main-section">
       <div className="container-header">
@@ -15,27 +24,27 @@ export const Section = ({
         <div className="selectors">
           {/* This should display the favorited count */}
           <div
-            className={`selector ${"active"}`}
+            className={`selector ${activeTab == "favorite" ? "active" : ""}`}
             onClick={() => {
-              alert("click favorited");
+              buttonToggleHandler("favorite");
             }}
           >
-            favorited ( {0} )
+            favorited ( {favoriteCounts} )
           </div>
 
           {/* This should display the unfavorited count */}
           <div
-            className={`selector ${""}`}
-            onClick={() => {
-              alert("click unfavorited");
-            }}
+            className={`selector ${activeTab == "unfavorite" ? "active" : ""}`}
+            onClick={() => buttonToggleHandler("unfavorite")}
           >
-            unfavorited ( {10} )
+            unfavorited ( {unfavoriteCounts} )
           </div>
           <div
-            className={`selector ${""}`}
+            className={`selector ${
+              activeTab == "create-dog-form" ? "active" : ""
+            }`}
             onClick={() => {
-              alert("clicked create dog");
+              buttonToggleHandler("create-dog-form");
             }}
           >
             create dog

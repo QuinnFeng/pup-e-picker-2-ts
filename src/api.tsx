@@ -8,7 +8,7 @@ const getAllDogs = () => {
   return fetch(`${baseUrl}/dogs`).then((data) => data.json());
 };
 
-const postDog = ({ name, image, description, isFavorite }: Dog) => {
+const postDog = ({ name, image, description, isFavorite }: Partial<Dog>) => {
   return fetch(`${baseUrl}/dogs`, {
     method: "POST",
     headers,
@@ -18,7 +18,11 @@ const postDog = ({ name, image, description, isFavorite }: Dog) => {
 const deleteDogRequest = (id: number) => {
   return fetch(`${baseUrl}/dogs/${id}`, {
     method: "DELETE",
-  }).then((data) => data.json());
+  })
+    .then((response) => response)
+    .catch((error) => {
+      console.error(error); // Add this line to log any errors
+    });
 };
 
 const patchFavoriteForDog = (id: number, updatedDog: Partial<Dog>) => {
@@ -26,11 +30,6 @@ const patchFavoriteForDog = (id: number, updatedDog: Partial<Dog>) => {
     method: "PATCH",
     headers,
     body: JSON.stringify(updatedDog),
-  }).then((response) => {
-    if (!response.ok) {
-      throw new Error(`Failed to update dog: ${response.status}`);
-    }
-    return response.json();
   });
 };
 
